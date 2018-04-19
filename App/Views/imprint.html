@@ -1,0 +1,27 @@
+{% extends "snippets/base.html" %}
+
+{% block content %}
+    {{ parent() }}
+
+    <div class="container">
+        {{ include('snippets/servicenav.html') }}
+        {{ include('snippets/topnavigation.html') }}
+    </div>
+    <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-8 blog-main">
+                <h3 class="pb-3 mb-4 font-italic border-bottom">
+                    Betreiber und rechtliche Hinweise
+                </h3>
+
+                <div class="blog-post">
+                    <h2 class="blog-post-title">Impressum</h2>
+                    <p class="blog-post-meta">January 1, 2014 by <a href="#">Mark</a></p>
+
+                    <p>Hier findest Du bald das Impressum der Seite.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

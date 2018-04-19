@@ -1,0 +1,31 @@
+{% extends "admin/snippets/base.html" %}
+
+{% block content %}
+{{ parent() }}
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-12 form-group">
+                <form action="/admin/addPost" method="get">
+                    <input type="hidden" name="csfrtoken" value="kdevnt">
+                    <button type="submit" class="btn btn-success">Add post</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="list-group col-md-12">
+                    <p class="list-group-item list-group-item-action active">
+                        Available posts:
+                    </p>
+                    {% for item in posts %}
+                    <a href="/admin/editPost?id={{ item.id }}" class="list-group-item list-group-item-action">{{ item.title }}</a></li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "admin/snippets/base.html" %}
+
+{% block content %}
+{{ parent() }}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12 form-group">
+            <form action="/admin/addImage" method="get">
+                <input type="hidden" name="csfrtoken" value="kdevnt">
+                <button type="submit" class="btn btn-success">Add image</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list-group col-md-12">
+                <p class="list-group-item list-group-item-action active">
+                    Available images:
+                </p>
+                {% for item in images %}
+                <a href="/admin/editImage?id={{ item.id }}" class="list-group-item list-group-item-action">{{ item.title }}</a></li>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
