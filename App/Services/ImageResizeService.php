@@ -188,12 +188,12 @@ class ImageResizeService {
 
         $imageCropped = $this->imageModified;
 
-        $this->imageModified = imagecreatetruecolor($newWidth , $newHeight);
+        $this->imageModified = imagecreatetruecolor($newWidth, $newHeight);
 
         imagealphablending($this->imageModified, false);
         imagesavealpha($this->imageModified, true);
 
-        imagecopy($this->imageModified, $imageCropped , 0, 0, $cropStartX, $cropStartY, $newWidth, $newHeight);
+        imagecopy($this->imageModified, $imageCropped, 0, 0, $cropStartX, $cropStartY, $newWidth, $newHeight);
 
         $this->newWidth = $newWidth;
         $this->newHeight = $newHeight;
@@ -245,8 +245,8 @@ class ImageResizeService {
         switch ($extension) {
             case IMAGETYPE_GIF:
                 if (imagetypes() & IMG_GIF) {
-                    $imageFile = $saveImageName.'.gif';
-                    $imageResult = imagegif ($this->imageModified, $imageFile);
+                    $imageFile = $saveImageName . '.gif';
+                    $imageResult = imagegif($this->imageModified, $imageFile);
                 } else {
                     throw new \Exception('Your GD library does not support png image types.');
                 }
@@ -256,7 +256,7 @@ class ImageResizeService {
                     if ($quality === null) {
                         $quality = $this->getDefaultJPEGCompression();
                     }
-                    $imageFile = $saveImageName.'.jpg';
+                    $imageFile = $saveImageName . '.jpg';
                     $imageResult = imagejpeg($this->imageModified, $imageFile, $quality);
                 } else {
                     throw new \Exception('Your GD library does not support jpg image types.');
@@ -267,7 +267,7 @@ class ImageResizeService {
                     if ($quality === null) {
                         $quality = $this->getDefaultPNGCompression();
                     }
-                    $imageFile = $saveImageName.'.png';
+                    $imageFile = $saveImageName . '.png';
                     $imageResult = imagepng($this->imageModified, $imageFile, $quality);
                 } else {
                     throw new \Exception('Your GD library does not support png image types.');
@@ -402,7 +402,7 @@ class ImageResizeService {
      */
     private function openImageFile(string $imagePath)
     {
-        $imageType =  exif_imagetype($imagePath);
+        $imageType = exif_imagetype($imagePath);
 
         if ($imageType === false) {
             throw new \InvalidArgumentException('Image type is not supported or file is corrupted.');
@@ -414,7 +414,7 @@ class ImageResizeService {
 
         switch ($imageType) {
             case IMAGETYPE_GIF :
-                $image = imagecreatefromgif ($imagePath);
+                $image = imagecreatefromgif($imagePath);
                 $this->sourceType = IMAGETYPE_GIF;
                 break;
             case IMAGETYPE_JPEG :

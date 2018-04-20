@@ -10,7 +10,7 @@ class NiceUrlConverter
      *
      * @return null|string|string[]
      */
-    public function getCleanString(string $cleanString, string $delimiter='-')
+    public function getCleanString(string $cleanString, string $delimiter = '-')
     {
         $cleanString = iconv('UTF-8', 'ASCII//TRANSLIT', $cleanString);
         $cleanString = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $cleanString);
