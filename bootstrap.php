@@ -4,7 +4,7 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 
-require_once dirname(__FILE__) . '/vendor/autoload.php';
+require_once 'vendor/autoload.php';
 
 // Create a simple "default" Doctrine ORM configuration for Annotations
 $isDevMode = true;
