@@ -6,4 +6,9 @@
             <file>./tests/RouterServiceTest.php</file>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory>./App</directory>
+        </whitelist>
+    </filter>
 </phpunit>

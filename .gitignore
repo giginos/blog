@@ -5,3 +5,4 @@ db.sqlite
 .DS_Store
 _ide_helper.php
 create_product.php
+coverage.xml
