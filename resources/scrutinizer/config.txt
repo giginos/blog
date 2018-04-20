@@ -9,16 +9,16 @@ build:
                     - 'true'
             tests:
                 override:
-                    - php-scrutinizer-run
-                    -
-                        command: phpcs-run
-                        use_website_config: true
                     -
                         command: 'vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-clover clover.xml; if [ "$?" -gt "2" ]; then exit 1; fi'
                         coverage:
                             file: clover.xml
                             format: php-clover
                         idle_timeout: 360
+                    - php-scrutinizer-run
+                    -
+                        command: phpcs-run
+                        use_website_config: true
             environment:
                 node:
                     version: 6.0.0
