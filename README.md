@@ -1,4 +1,6 @@
 # blog
+[![Build Status](https://travis-ci.org/giginos/blog.svg?branch=master)](https://travis-ci.org/giginos/blog)
+
 A very simple blog written in PHP
 
 ### Local environment
