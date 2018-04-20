@@ -2,6 +2,7 @@
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 
 require_once dirname(__FILE__) . '/vendor/autoload.php';
 
@@ -29,4 +30,12 @@ $dbParams = [
 ];
 
 // obtaining the entity manager
-$entityManager = EntityManager::create($conn, $config);
+try {
+    $entityManager = EntityManager::create($conn, $config);
+} catch (ORMException $ormException) {
+    // Abort, if EntityManager can not be initialized
+    trigger_error(
+        $ormException->getMessage() . PHP_EOL .  $ormException->getTraceAsString(),
+        E_USER_ERROR
+    );
+}
