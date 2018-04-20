@@ -9,6 +9,7 @@ class RouterServiceTest extends UnitTest
     public function testDispatch()
     {
         // Check for indexController
+        $_SERVER['REQUEST_URI'] = '';
         $routerService = new RouterService($this->entityManager);
         $res = $routerService->dispatch();
         $this->assertEquals('index.html', $res['template']);
