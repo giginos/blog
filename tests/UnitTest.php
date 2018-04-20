@@ -19,7 +19,11 @@ abstract class UnitTest extends TestCase
     {
         parent::setUp();
 
-        require_once __DIR__ . '/../bootstrap.php';
+        require_once dirname(__FILE__) . '/../bootstrap.php';
+
+        if (!isset($entityManager)) {
+            throw new \Exception('Unable to load entityManager.');
+        }
 
         $this->entityManager = $entityManager;
     }
