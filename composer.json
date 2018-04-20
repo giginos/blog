@@ -5,7 +5,7 @@
         "twbs/bootstrap": "^4.0"
     },
     "autoload": {
-        "psr-0": {"": "App"},
+        "psr-0": {"App": "App"},
         "classmap": [
             "tests/UnitTest.php"
         ]

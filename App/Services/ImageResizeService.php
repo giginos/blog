@@ -200,6 +200,29 @@ class ImageResizeService {
     }
 
     /**
+     * @param null|int $quality
+     * @param null|int $extension
+     *
+     * @return null|int
+     */
+    private function calculateQuality($quality, $extension)
+    {
+        if ($quality < 0) {
+            $quality = 0;
+        }
+
+        if ($quality > 100 && $extension === IMAGETYPE_JPEG) {
+            $quality = 100;
+        }
+
+        if ($quality > 9 && $extension === IMAGETYPE_PNG) {
+            $quality = 9;
+        }
+
+        return $quality;
+    }
+
+    /**
      * Saves image after modifications, or a copy if no modifications were done.
      * Allows adding a solid color background to transparent images.
      * Only first two parameters are required. By default output will be saved as the same type as source.
@@ -214,6 +237,9 @@ class ImageResizeService {
      */
     public function saveImageFile(string $saveImageName, $extension = null, $quality = null, $backgroundColor = null): string
     {
+        $imageResult = false;
+        $imageFile = '';
+
         if ($this->imageModified === null) {
             $this->copyImageDataWithoutResampling();
         }
@@ -230,17 +256,7 @@ class ImageResizeService {
             $this->addBackgroundColor($backgroundColor);
         }
 
-        if ($quality < 0) {
-            $quality = 0;
-        }
-
-        if ($quality > 100 && $extension === IMAGETYPE_JPEG) {
-            $quality = 100;
-        }
-
-        if ($quality > 9 && $extension === IMAGETYPE_PNG) {
-            $quality = 9;
-        }
+        $quality = $this->calculateQuality($quality, $extension);
 
         switch ($extension) {
             case IMAGETYPE_GIF:

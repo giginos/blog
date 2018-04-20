@@ -30,7 +30,3 @@ $dbParams = [
 
 // obtaining the entity manager
 $entityManager = EntityManager::create($conn, $config);
-
-if (!$entityManager instanceof EntityManager) {
-    throw new \Exception('Unable to create EntityManager.');
-}
