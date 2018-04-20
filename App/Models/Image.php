@@ -20,11 +20,11 @@ class Image
     /**
      * OWNING SIDE
      *
-     * @var Article
+     * @var Post
      * @ORM\ManyToOne(targetEntity="App\Models\Post", inversedBy="images")
      * @ORM\JoinColumn(name="postId", referencedColumnName="id")
      */
-    private $article;
+    private $post;
     /**
      * @var string
      *
@@ -55,19 +55,19 @@ class Image
     }
 
     /**
-     * @return Article
+     * @return Post
      */
-    public function getArticle(): Article
+    public function getPost(): Post
     {
-        return $this->article;
+        return $this->post;
     }
 
     /**
-     * @param Article $article
+     * @param Post $post
      */
-    public function setArticle(Article $article)
+    public function setPost(Post $post)
     {
-        $this->article = $article;
+        $this->post = $post;
     }
 
     /**

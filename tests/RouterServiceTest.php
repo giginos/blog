@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 use \App\Services\RouterService;
 
 final class RouterServiceTest extends UnitTest

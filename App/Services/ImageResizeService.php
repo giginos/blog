@@ -289,8 +289,6 @@ class ImageResizeService {
                     throw new \Exception('Your GD library does not support png image types.');
                 }
                 break;
-            default:
-                break;
         }
 
         if ($imageResult === false) {
