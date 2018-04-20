@@ -48,6 +48,6 @@ abstract class AbstractController
         }
         echo $this->twig->render($this->template, $this->view);
 
-        return ['template' => $this->template , 'view' => $this->view];
+        return ['template' => $this->template, 'view' => $this->view];
     }
 }
