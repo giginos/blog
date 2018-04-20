@@ -2,7 +2,6 @@
 
 use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
 
 require_once 'vendor/autoload.php';
 
