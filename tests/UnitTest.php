@@ -1,7 +1,5 @@
 <?php
 
-namespace Tests;
-
 use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManager;
 
@@ -18,7 +16,7 @@ abstract class UnitTest extends TestCase
     {
         parent::__construct($name , $data, $dataName);
 
-        require_once dirname(__FILE__) . '/bootstrap.php';
+        require_once dirname(__FILE__) . '/../bootstrap.php';
 
         if (!isset($entityManager)) {
             throw new \Exception(sprintf('Unable to load entityManager %s.', dirname(__FILE__) . '/../bootstrap.php'));

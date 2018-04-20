@@ -1,10 +1,8 @@
 <?php
 
-namespace Tests;
-
 use App\Services\RouterService;
 
-class RouterServiceTest extends UnitTest
+final class RouterServiceTest extends UnitTest
 {
     public function testDispatch()
     {
