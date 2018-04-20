@@ -1,6 +1,6 @@
 <?php
 
-use App\Services\RouterService;
+use \App\Services\RouterService;
 
 final class RouterServiceTest extends UnitTest
 {
