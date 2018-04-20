@@ -22,7 +22,7 @@ abstract class UnitTest extends TestCase
         require_once dirname(__FILE__) . '/../bootstrap.php';
 
         if (!isset($entityManager)) {
-            throw new \Exception('Unable to load entityManager.');
+            throw new \Exception(sprintf('Unable to load entityManager %s.', dirname(__FILE__) . '/../bootstrap.php'));
         }
 
         $this->entityManager = $entityManager;
