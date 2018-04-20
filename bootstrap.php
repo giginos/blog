@@ -30,12 +30,8 @@ $dbParams = [
 ];
 
 // obtaining the entity manager
-try {
-    $entityManager = EntityManager::create($conn, $config);
-} catch (ORMException $ormException) {
-    // Abort, if EntityManager can not be initialized
-    trigger_error(
-        $ormException->getMessage() . PHP_EOL .  $ormException->getTraceAsString(),
-        E_USER_ERROR
-    );
+$entityManager = EntityManager::create($conn, $config);
+
+if (!$entityManager instanceof EntityManager) {
+    throw new \Exception('Unable to create EntityManager.');
 }
