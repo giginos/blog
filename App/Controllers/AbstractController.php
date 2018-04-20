@@ -26,7 +26,7 @@ abstract class AbstractController
     public function __construct(EntityManagerInterface $entityManager)
     {
         $this->entityManager = $entityManager;
-        $loader = new Twig_Loader_Filesystem('../App/Views');
+        $loader = new Twig_Loader_Filesystem(dirname(__FILE__) . '/../../App/Views');
         $this->twig = new Twig_Environment($loader, [
             'cache' => false,
             'cachex' => './App/Cache',
@@ -36,7 +36,7 @@ abstract class AbstractController
     /**
      * @param string|null $template
      *
-     * @return string
+     * @return array
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
@@ -47,5 +47,7 @@ abstract class AbstractController
             $this->template = $template;
         }
         echo $this->twig->render($this->template, $this->view);
+
+        return ['template' => $this->template , 'view' => $this->view];
     }
 }

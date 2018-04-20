@@ -7,6 +7,11 @@
     "autoload": {
         "psr-0": {"": "App"}
     },
+    "autoload-dev": {
+        "classmap": [
+            "tests/UnitTest.php"
+        ]
+    },
     "require-dev": {
         "phpunit/phpunit": "^6.5"
     }
