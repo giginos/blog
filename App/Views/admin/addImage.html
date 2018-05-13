@@ -9,22 +9,13 @@
             <h4 class="mb-3">Create new Image</h4>
             <form action="/admin/addImage" method="post" class="needs-validation" enctype="multipart/form-data" novalidate>
                 <input type="hidden" name="csfrtoken" value="hikgdz">
-                <input type="hidden" name="MAX_FILE_SIZE" value="30000">
+                <input type="hidden" name="MAX_FILE_SIZE" value="900000">
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="title">Title</label>
                         <input type="text" class="form-control" name="title" id="title" placeholder="" value="" required>
                         <div class="invalid-feedback">
                             A Title is required.
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label for="description">Description</label>
-                        <input type="text" class="form-control" name="description" id="description" placeholder="" value="" required>
-                        <div class="invalid-feedback">
-                            A Description is required.
                         </div>
                     </div>
                 </div>

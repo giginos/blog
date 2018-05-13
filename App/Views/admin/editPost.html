@@ -8,54 +8,30 @@
     <div class="row">
         <div class="col-md-4 order-md-2 mb-4">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
-                <span class="text-muted">Your cart</span>
-                <span class="badge badge-secondary badge-pill">3</span>
+                <span class="text-muted">Media</span>
+                <span class="badge badge-secondary badge-pill">0</span>
             </h4>
-            <ul class="list-group mb-3">
+            <ul class="list-group mb-3" id="assigned-images">
                 <li class="list-group-item d-flex justify-content-between lh-condensed">
                     <div>
-                        <h6 class="my-0">Product name</h6>
-                        <small class="text-muted">Brief description</small>
+                        <h6 class="my-0">Tolles Bild</h6>
+                        <small class="text-muted">(0.5 mb)</small>
                     </div>
-                    <span class="text-muted">$12</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                        <h6 class="my-0">Second product</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$8</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                        <h6 class="my-0">Third item</h6>
-                        <small class="text-muted">Brief description</small>
-                    </div>
-                    <span class="text-muted">$5</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between bg-light">
-                    <div class="text-success">
-                        <h6 class="my-0">Promo code</h6>
-                        <small>EXAMPLECODE</small>
-                    </div>
-                    <span class="text-success">-$5</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between">
-                    <span>Total (USD)</span>
-                    <strong>$20</strong>
+                    <span class="text-muted">
+                        <button class="button btn-danger btn-sm">delete</button>
+                    </span>
+                    <input type="hidden" name="image[]" value="2">
                 </li>
             </ul>
 
             <form class="card p-2">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Promo code">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-secondary">Redeem</button>
-                    </div>
+                    <input type="text" id="imagesearch" class="form-control" placeholder="image name">
                 </div>
             </form>
-        </div>
 
+            <ul class="list-group mb-3" id="imagesearch-results"></ul>
+        </div>
 
         <div class="col-md-8 order-md-1">
             <h4 class="mb-3">Edit Post</h4>
@@ -82,13 +58,12 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="url">Description</label>
-
-
-
-                        <input type="text" class="form-control" name="url" id="url" placeholder="" value="{{ post.url }}" required>
+                        <label for="description">Description</label>
+                        <textarea name="description" id="description" class="form-control" required>
+                            {{ post.description }}
+                        </textarea>
                         <div class="invalid-feedback">
-                            A URL is required.
+                            Please add a description.
                         </div>
                     </div>
                 </div>
@@ -99,4 +74,50 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block footer %}
+{{ parent() }}
+
+<script>
+    $(document).ready( function() {
+
+        // @TODO: Add remove-events...
+
+        $('#imagesearch').on('input', function() {
+            var searchKeyword = $(this).val();
+
+            if (searchKeyword.length >= 3) {
+                $.post('/admin/searchImage', { keywords: searchKeyword }, function(data) {
+                    $('#imagesearch-results').empty()
+                    $.each(data, function() {
+                        var itemPattern = '<li class="list-group-item d-flex justify-content-between lh-condensed">\n' +
+                            '                    <div>\n' +
+                            '                        <h6 class="my-0">' + this.title + '</h6>\n' +
+                            '                        <small class="text-muted">(0.5 mb)</small>\n' +
+                            '                    </div>\n' +
+                            '                    <span class="text-muted">\n' +
+                            '                        <button class="button btn-toolbar btn-sm">add</button>\n' +
+                            '                        <button class="button btn-danger btn-sm invisible">delete</button>\n' +
+                            '                    </span>\n' +
+                            '                    <input type="hidden" name="image[]" value="' + this.id + '">\n' +
+                            '                </li>';
+
+                        $('#imagesearch-results').append(itemPattern);
+                    });
+
+                    $('#imagesearch-results .btn-toolbar.btn-sm').click( function() {
+                        // Move image to assigned onces
+                        $(this).closest('li').find('.invisible').removeClass('invisible');
+                        $(this).addClass('invisible');
+                        $(this).closest('li').detach().appendTo("#assigned-images");
+
+                        // Add remove-event
+                    });
+
+                }, 'json');
+            }
+        });
+    });
+</script>
 {% endblock %}

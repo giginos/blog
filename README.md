@@ -5,6 +5,8 @@ A extreme simple blog written in PHP
 
 ### Local environment
 This project will contain a simple docker installation too.
+You can start it using `/docker/docker-compose up --force-recreate --remove-orphans`
+
 
 ### Run tests
 vendor/bin/phpunit

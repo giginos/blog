@@ -416,7 +416,8 @@ class ImageResizeService {
      */
     private function openImageFile(string $imagePath)
     {
-        $imageType = exif_imagetype($imagePath);
+        $imageSize = getimagesize($imagePath);
+        $imageType = @$imageSize[2];
 
         if ($imageType === false) {
             throw new \InvalidArgumentException('Image type is not supported or file is corrupted.');

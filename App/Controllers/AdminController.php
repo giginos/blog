@@ -57,6 +57,9 @@ class AdminController extends AbstractController
 
         // @TODO: Finish me!
 
+        $imageService = ImageServiceFactory::build($this->entityManager);
+        $this->view['images'] = $imageService->listImages(0, 20, 'id', 'ASC');
+
         return $this->render();
     }
 
@@ -80,8 +83,34 @@ class AdminController extends AbstractController
         return $this->render();
     }
 
+    public function editImageAction()
+    {
+        // @TODO: Add media, too
+        $this->template = 'admin/editImage.html';
+
+        $imageService = ImageServiceFactory::build($this->entityManager);
+
+        if (isset($_POST['csfrtoken'])) {
+            // $imageService->updateImage($_POST);
+
+            return $this->listImagesAction();
+        }
+
+        $this->view['image'] = $imageService->getImage((int) $_GET['id']);
+        $this->view['thumbnails'] = $imageService->getThumbnailsForImage($this->view['image']->getFilename());
+
+        return $this->render();
+    }
+
     public function phpinfoAction()
     {
         die(phpinfo());
+    }
+
+    public function searchImageAction()
+    {
+        $imageService = ImageServiceFactory::build($this->entityManager);
+
+        echo json_encode($imageService->searchImage($_POST['keywords']));
     }
 }

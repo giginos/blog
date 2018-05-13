@@ -19,4 +19,17 @@ class NiceUrlConverter
 
         return $cleanString;
     }
+
+    /**
+     * @param string $cleanString
+     * @param string $delimiter
+     *
+     * @return string
+     */
+    public function getCleanFilename(string $cleanString, string $delimiter = '-')
+    {
+        $fileInfo = pathinfo($cleanString);
+
+        return $this->getCleanString($fileInfo['filename'], $delimiter) . '.' . $fileInfo['extension'];
+    }
 }

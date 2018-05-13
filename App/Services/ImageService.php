@@ -17,6 +17,10 @@ class ImageService
      */
     const VALID_FILE_SUFFIX = ['jpg', 'jpeg', 'gif', 'png', 'svg'];
     /**
+     * @var array
+     */
+    const THUMBNAIL_DIMENSIONS = [100, 300, 600, 900, 1200];
+    /**
      * @var string
      */
     const MEDIA_IMAGE_DIR = 'media/images';
@@ -59,14 +63,17 @@ class ImageService
         foreach ($images as $counter => $rawImage) {
             $targetPath = $this->getTargetPath($rawImage['name']);
             $this->uploadImage($rawImage, $targetPath);
+
             $imageTitle = $counter > 0 ? $imageData['title'] . ' ' . $counter : $imageData['title'];
 
             $image = new Image();
             $image->setTitle($imageTitle);
-            $image->setFilename($targetPath);
+            $image->setFilename(str_replace($_SERVER['DOCUMENT_ROOT'], '', $targetPath));
 
             $this->entityManager->persist($image);
             $this->entityManager->flush();
+
+            $this->createThumbnails($targetPath);
         }
     }
 
@@ -76,6 +83,88 @@ class ImageService
     public function getMediaPath(): string
     {
         return $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . self::MEDIA_IMAGE_DIR;
+    }
+
+    /**
+     * @param int    $start
+     * @param int    $amount
+     * @param string $orderBy
+     * @param string $orderDirection
+     *
+     * @return Image[]
+     */
+    public function listImages($start = 0, $amount = 20, $orderBy = 'id', $orderDirection = 'ASC'): array
+    {
+        $imageRepro = $this->entityManager->getRepository(Image::class);
+
+        return $imageRepro->findBy([], [$orderBy => $orderDirection], $amount, $start);
+    }
+
+    /**
+     * @param int $imageId
+     *
+     * @return null|Image
+     */
+    public function getImage(int $imageId)
+    {
+        $imageRepro = $this->entityManager->getRepository(Image::class);
+
+        return $imageRepro->find($imageId);
+    }
+
+    /**
+     * @param string $imageFileName
+     *
+     * @return array
+     */
+    public function getThumbnailsForImage(string $imageFileName)
+    {
+        $thumbs = [];
+        $thumbnailPath = array_shift(array_values(explode('.', $imageFileName)));
+
+        foreach (self::THUMBNAIL_DIMENSIONS as $thumbnailMaxDimension) {
+            $thumbs[] = $thumbnailPath . '_' . $thumbnailMaxDimension . '.jpg';
+        }
+
+        return $thumbs;
+    }
+
+    /**
+     * @param int $imageId
+     */
+    public function deleteImage(int $imageId)
+    {
+        $imageRepro = $this->entityManager->getRepository(Image::class);
+        // $postRepro = $this->entityManager->getRepository(Post::class);
+
+        $image = $imageRepro->find($imageId);
+
+        // Cleanup post relations
+        // @TODO: Check if cleanup is required
+
+        // Delete images and thumbnails on filesystem
+        $fileName = $this->getMediaPath() . DIRECTORY_SEPARATOR . $image->getFilename();
+        unlink($fileName);
+
+        foreach ($this->getThumbnailsForImage($image->getFilename()) as $thumb) {
+            $fileName = $this->getMediaPath() . DIRECTORY_SEPARATOR . $thumb;
+            unlink($fileName);
+        }
+
+        $this->entityManager->remove($image);
+        $this->entityManager->flush();
+    }
+
+    public function searchImage(string $searchString)
+    {
+        $query = $this->entityManager->createQuery(
+            'SELECT i.id, i.title
+            FROM App\\Models\\Image i
+            WHERE i.title LIKE :title
+            ORDER BY i.title ASC'
+        )->setParameter('title', $searchString . '%');
+
+        return $query->getResult();
     }
 
     /**
@@ -139,7 +228,11 @@ class ImageService
      */
     private function getTargetPath(string $rawFileName, int $recursionCounter = 0): string
     {
-        $maxRecustions = 100;
+        $maxRecursions = 100;
+
+        if ($recursionCounter > $maxRecursions) {
+            throw new \Exception(sprintf('Max recursions reached for file %s.', $rawFileName));
+        }
 
         $targetPath = $this->getMediaPath() . DIRECTORY_SEPARATOR . date('Y-m');
 
@@ -147,15 +240,12 @@ class ImageService
             throw new \Exception(sprintf('Could not create directory %s', $targetPath));
         }
 
-        $niceUrl = $this->niceUrlConverter($rawFileName);
-        $targetPath .= DIRECTORY_SEPARATOR . $niceUrl;
+        $niceFilename = $this->niceUrlConverter->getCleanFilename($rawFileName);
+        $targetPath .= DIRECTORY_SEPARATOR . $niceFilename;
 
-        if (file_exists($targetPath) && $recursionCounter <= $maxRecustions) {
-            $targetPath = $this->getTargetPath($recursionCounter . '_' . $niceUrl);
-        }
-
-        if ($recursionCounter > $maxRecustions) {
-            throw new \Exception(sprintf('Max recustions reached for file %s.', $rawFileName));
+        if (file_exists($targetPath)) {
+            $recursionCounter++;
+            $targetPath = $this->getTargetPath($recursionCounter . '_' . $niceFilename, $recursionCounter);
         }
 
         return $targetPath;
@@ -173,5 +263,25 @@ class ImageService
         }
 
         return mkdir($filepath, 0777, true);
+    }
+
+    /**
+     * @param string $filepath
+     *
+     * @throws \Exception
+     */
+    private function createThumbnails(string $filepath)
+    {
+        $thumbnailPath = array_shift(array_values(explode('.', $filepath)));
+
+        foreach (self::THUMBNAIL_DIMENSIONS as $thumbnailMaxDimension) {
+            $this->imageResizeService->init($filepath);
+            $this->imageResizeService->resizeWithinDimensions($thumbnailMaxDimension, $thumbnailMaxDimension);
+
+            $this->imageResizeService->saveImageFile(
+                $thumbnailPath . '_' . $thumbnailMaxDimension,
+                IMAGETYPE_JPEG
+            );
+        }
     }
 }

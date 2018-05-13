@@ -29,7 +29,7 @@ class PostService
      * @param string $orderDirection
      * @param bool   $onlyActive
      *
-     * @return array
+     * @return Post[]
      */
     public function listPosts($start = 0, $amount = 20, $orderBy = 'id', $orderDirection = 'ASC', $onlyActive = true): array
     {
@@ -47,13 +47,12 @@ class PostService
     /**
      * @param int $postId
      *
-     * @return null|object
+     * @return null|Post
      */
     public function getPost(int $postId)
     {
         $postRepro = $this->entityManager->getRepository(Post::class);
 
-        /** @var Post $post */
         return $postRepro->find($postId);
     }
 
