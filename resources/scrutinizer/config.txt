@@ -2,26 +2,26 @@ build:
     environment:
         php:
             version: 7.2
+    tests:
+        before:
+            - 'composer install --dev --prefer-source'
+            - 'vendor/bin/doctrine orm:schema-tool:create'
+        override:
+            -
+                command: 'vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-clover clover.xml; if [ "$?" -gt "2" ]; then exit 1; fi'
+                coverage:
+                    file: clover.xml
+                    format: php-clover
+                idle_timeout: 360
+            - php-scrutinizer-run
+            -
+                command: phpcs-run
+                use_website_config: true
     nodes:
         analysis:
-            project_setup:
-                override:
-                    - 'true'
             tests:
                 override:
-                    -
-                        command: 'vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-clover clover.xml; if [ "$?" -gt "2" ]; then exit 1; fi'
-                        coverage:
-                            file: clover.xml
-                            format: php-clover
-                        idle_timeout: 360
-                    - php-scrutinizer-run
-                    -
-                        command: phpcs-run
-                        use_website_config: true
-            environment:
-                node:
-                    version: 6.0.0
+                    - js-scrutinizer-run
         tests: true
 filter:
     excluded_paths:
@@ -71,7 +71,6 @@ checks:
             verify_documented_constraints: true
             verify_parent_constraints: true
     javascript: true
-
 coding_style:
     php:
         spaces:
